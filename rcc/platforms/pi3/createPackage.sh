@@ -3,7 +3,7 @@
 # Package Name
 package="qs.raspi"
 version="1.0"
-revision="1"
+revision="2"
 packageName=${package}_${version}-${revision}
 
 echo $packageName
@@ -21,18 +21,19 @@ echo " > $tmp"
 # Create folder structure
 mkdir -p $tmp/$packageName/$installPath/applications
 mkdir -p $tmp/$packageName/$installPath/artifacts
-mkdir -p $tmp/$packageName/$installPath/bin
-mkdir -p $tmp/$packageName/$installPath/lib
+mkdir -p $tmp/$packageName/$installPath/scripts
+mkdir -p $tmp/$packageName/$installPath/pi3/bin
+mkdir -p $tmp/$packageName/$installPath/pi3/lib
 mkdir -p $tmp/$packageName/$binPath
 mkdir -p $tmp/$packageName/DEBIAN
 
 # Copy over OpenCPI runtimes
-cp -Lr $OCPI_CDK_DIR/pi3/bin/* $tmp/$packageName/$installPath/bin/
-cp -Lr $OCPI_CDK_DIR/pi3/lib/* $tmp/$packageName/$installPath/lib/
+cp -Lr $OCPI_CDK_DIR/pi3/bin/* $tmp/$packageName/$installPath/pi3/bin/
+cp -Lr $OCPI_CDK_DIR/pi3/lib/* $tmp/$packageName/$installPath/pi3/lib/
 cp -Lr $OCPI_CDK_DIR/applications/* $tmp/$packageName/$installPath/applications/
 
 # Make relative links
-cd $tmp/$packageName/$installPath/bin/
+cd $tmp/$packageName/$installPath/pi3/bin/
 ln -sr ./ocpirun $tmp/$packageName/$binPath/
 ln -sr ./ocpiremote $tmp/$packageName/$binPath/
 ln -sr ./ocpiserve $tmp/$packageName/$binPath/
@@ -50,7 +51,19 @@ for dir in $OCPI_CDK_DIR/../project-registry/*; do
   fi 
 done
 
-# TODO: Applications
+cat >$tmp/$packageName/$installPath/default-system.xml << EOM
+<opencpi>
+  <container>
+    <rcc load='1' />
+    <remote load='1' />
+  </container>
+  <transfer smbsize='100M'>
+    <pio load='1' />
+    <dma load='1' />
+    <socket load='1' />
+  </transfer>
+</opencpi>
+EOM
 
 cat >$tmp/$packageName/DEBIAN/control <<EOM
 Package: ${package}
@@ -58,7 +71,6 @@ Version: ${version}-${revision}
 Section: base
 Priority: optional
 Architecture: armhf
-Depends: libusb-dev (>= 1.0.0)
 Maintainer: Martyn <sdrhertz@users.noreply.github.com>
 Description: OpenCPI runtime and components for Raspberry Pi 3
 EOM
