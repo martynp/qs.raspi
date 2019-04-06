@@ -1,0 +1,11 @@
+<project name="qs.raspi">
+  <hdl>
+    <assemblies />
+    <primitives />
+  </hdl>
+  <rcc>
+    <platforms>
+      <platform name="pi3" />
+    </platforms>
+  </rcc>
+</project>
