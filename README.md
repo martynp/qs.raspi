@@ -16,9 +16,9 @@ cd [opencpi_dir]
 source ./scripts/install-opencpi.sh pi3
 ```
 
-It is then possible to create the installer .deb using the script located at [qs.raspi\_dir]/platforms/rcc/pi3/createPackage.sh.
+It is then possible to create the installer .deb using the script located at `[qs.raspi\_dir]/rcc/platforms/pi3/createPackage.sh`.
 
-This will create ./qs.raspi-[version].deb which should be transferred to the Raspberry PI and installed using:
+This will create `./qs.raspi-[version].deb` which should be transferred to the Raspberry PI and installed using:
 
 ```
 sudo apt-get install ./qs.raspi-[version].deb
